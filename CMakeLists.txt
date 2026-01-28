@@ -68,4 +68,9 @@ else()
     add_custom_command(TARGET dtks_ext POST_BUILD
         COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:dtks_ext> ${CMAKE_SOURCE_DIR}/src/dtks
     )
+
+
+    # install to PYTHON_SITE_PACKAGES
+    install(TARGETS dtks_ext LIBRARY DESTINATION ${PYTHON_SITE_PACKAGES})
+    install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/module/dtks/ DESTINATION ${PYTHON_SITE_PACKAGES}/dtks)
 endif()
