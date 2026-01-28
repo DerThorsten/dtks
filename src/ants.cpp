@@ -25,8 +25,7 @@ namespace ant{
         food_map_(params_.shape, 0),
         nest_map_(params_.shape, 0),
         nest_positions_(),
-        rd_(),
-        generator_(rd_()),
+        generator_(params_.seed),
         direction_change_dist_(-0.1f, 0.1f)
     {
 

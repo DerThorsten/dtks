@@ -35,6 +35,7 @@ namespace ant{
         float random_wiggle =  M_PI / 30;
         float wall_repellent_strength = 100.5f;
         float pheromone_truncation_threshold = 0.0001f;
+        long seed = 42;
     };
 
 
@@ -115,7 +116,6 @@ namespace ant{
 
 
             // distribution for random direction changes
-            std::random_device rd_;
             std::mt19937 generator_;
             std::uniform_real_distribution<float> direction_change_dist_;
 

@@ -50,8 +50,6 @@ find_package(nanobind CONFIG REQUIRED)
 
 
 
-
-
 nanobind_add_module(dtks_ext 
   src/dtks_ext.cpp
   src/ants.cpp
@@ -61,7 +59,13 @@ if(USE_RAYLIB)
   target_link_libraries(dtks_ext PRIVATE raylib)
 endif()
 
-
-add_custom_command(TARGET dtks_ext POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:dtks_ext> ${CMAKE_SOURCE_DIR}/src/dtks
-)
+if(DEFINED SKBUILD)
+    message(STATUS "using SKBUILD" ${SKBUILD})
+    install(TARGETS dtks_ext LIBRARY DESTINATION ${SKBUILD_PROJECT_NAME})
+    install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/module/dtks/ DESTINATION ${SKBUILD_PROJECT_NAME})
+else()
+    message(STATUS "not using SKBUILD -- package will not be installed, just be built in place")
+    add_custom_command(TARGET dtks_ext POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:dtks_ext> ${CMAKE_SOURCE_DIR}/src/dtks
+    )
+endif()
