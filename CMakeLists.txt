@@ -69,6 +69,16 @@ else()
         COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:dtks_ext> ${CMAKE_SOURCE_DIR}/src/dtks
     )
 
+    #if PYTHON_SITE_PACKAGES is not defined, we try to get it from python
+    if(NOT DEFINED PYTHON_SITE_PACKAGES)
+        execute_process(
+            COMMAND "${Python_EXECUTABLE}" -c "import site; print(site.getsitepackages()[0])"
+            OUTPUT_STRIP_TRAILING_WHITESPACE OUTPUT_VARIABLE PYTHON_SITE_PACKAGES)
+        message(STATUS "PYTHON_SITE_PACKAGES not defined, using detected value: ${PYTHON_SITE_PACKAGES}")
+    else()
+        message(STATUS "PYTHON_SITE_PACKAGES defined as: ${PYTHON_SITE_PACKAGES}")
+    endif()
+
 
     # install to PYTHON_SITE_PACKAGES
     install(TARGETS dtks_ext LIBRARY DESTINATION ${PYTHON_SITE_PACKAGES})
