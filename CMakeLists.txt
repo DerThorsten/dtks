@@ -65,9 +65,9 @@ if(DEFINED SKBUILD)
     install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/module/dtks/ DESTINATION ${SKBUILD_PROJECT_NAME})
 else()
     message(STATUS "not using SKBUILD -- package will not be installed, just be built in place")
-    add_custom_command(TARGET dtks_ext POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:dtks_ext> ${CMAKE_SOURCE_DIR}/src/dtks
-    )
+    # add_custom_command(TARGET dtks_ext POST_BUILD
+    #     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:dtks_ext> ${CMAKE_SOURCE_DIR}/src/dtks
+    # )
 
     #if PYTHON_SITE_PACKAGES is not defined, we try to get it from python
     if(NOT DEFINED PYTHON_SITE_PACKAGES)
