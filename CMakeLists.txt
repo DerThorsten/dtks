@@ -3,6 +3,15 @@
 cmake_minimum_required(VERSION 3.15...3.27)
 project(dtks) # Replace 'my_project' with the name of your project
 
+
+# allow shared libraries for emscripten
+if(EMSCRIPTEN)
+  set_property(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
+  set(CMAKE_SHARED_LIBRARY_CREATE_C_FLAGS "-s SIDE_MODULE=1")
+  set(CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS "-s SIDE_MODULE=1")
+  set(CMAKE_STRIP FALSE)  # used by default in pybind11 on .so modules
+endif()
+
 if (CMAKE_VERSION VERSION_LESS 3.18)
   set(DEV_MODULE Development)
 else()
