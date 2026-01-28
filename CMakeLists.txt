@@ -81,6 +81,6 @@ else()
 
 
     # install to PYTHON_SITE_PACKAGES
-    install(TARGETS dtks_ext LIBRARY DESTINATION ${PYTHON_SITE_PACKAGES})
+    install(TARGETS dtks_ext LIBRARY DESTINATION ${PYTHON_SITE_PACKAGES}/dtks/)
     install(DIRECTORY ${CMAKE_SOURCE_DIR}/src/module/dtks/ DESTINATION ${PYTHON_SITE_PACKAGES}/dtks)
 endif()
