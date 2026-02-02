@@ -16,7 +16,7 @@ inline int wrap(int i, int n)
 
 
 
-namespace ant{
+namespace dtks{
 
 
     
@@ -27,7 +27,7 @@ namespace ant{
         public:
 
 
-
+        Image2d() = default;
         
         Image2d(std::array<int, 2> shape) : shape_(shape)
         {

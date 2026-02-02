@@ -38,61 +38,46 @@ void export_ant_simulation(nb::module_& m)
 {
 
 
-    nb::class_<ant::AntSimulation>(m, "AntSimulation")
-        .def(nb::init<ant::Parameters>())
-        .def("step", &ant::AntSimulation::step)
-        .def("ready", &ant::AntSimulation::ready)
-        .def("parameters", &ant::AntSimulation::parameters,  nb::rv_policy::reference)
+    nb::class_<dtks::AntSimulation>(m, "AntSimulation")
+        .def(nb::init<dtks::Parameters>())
+        .def("step", &dtks::AntSimulation::step)
+        .def("ready", &dtks::AntSimulation::ready)
+        .def("parameters", &dtks::AntSimulation::parameters,  nb::rv_policy::reference)
 
-        .def("set_food_map", [](ant::AntSimulation & self, ImgUInt8 array){
-            // check that shape matches
-            if(array.shape(0) != self.parameters().shape[0] || array.shape(1) != self.parameters().shape[1])
-            {
-                throw std::runtime_error("Shape of food_map does not match simulation shape");
-            }
-            // copy data
-            for(int y = 0; y < self.parameters().shape[1]; ++y)
-            {
-                for(int x = 0; x < self.parameters().shape[0]; ++x)
+
+        .def("food_map", [](dtks::AntSimulation & self) {
+            auto& map = self.food_map();
+            return nb::ndarray<nb::numpy, uint8_t, nb::shape<-1, -1>>(
+                map.data(),
                 {
-                    self.food_map()(x, y) = array(x, y);
-                }
-            }
-        })
-
-        .def("set_nest_map", [](ant::AntSimulation & self, ImgUInt8 array){
-            // check that shape matches
-            if(array.shape(0) != self.parameters().shape[0] || array.shape(1) != self.parameters().shape[1])
-            {
-                throw std::runtime_error("Shape of nest_map does not match simulation shape");
-            }
-            // copy data
-            for(int y = 0; y < self.parameters().shape[1]; ++y)
-            {
-                for(int x = 0; x < self.parameters().shape[0]; ++x)
+                    std::size_t(map.shape()[0]), std::size_t(map.shape()[1])},
+                nb::handle()
+            );
+        }, nb::rv_policy::reference_internal)
+        .def("nest_map", [](dtks::AntSimulation & self) {
+            auto& map = self.nest_map();
+            return nb::ndarray<nb::numpy, uint8_t, nb::shape<-1, -1>>(
+                map.data(),
                 {
-                    self.nest_map()(x, y) = array(x, y);
-                }
-            }
-        })
+                    std::size_t(map.shape()[0]), std::size_t(map.shape()[1])},
+                nb::handle()
+            );
+        }, nb::rv_policy::reference_internal)
 
-        .def("set_is_land", [](ant::AntSimulation & self, ImgUInt8 array){
-            // check that shape matches
-            if(array.shape(0) != self.parameters().shape[0] || array.shape(1) != self.parameters().shape[1])
-            {
-                throw std::runtime_error("Shape of is_land does not match simulation shape");
-            }
-            // copy data
-            for(int y = 0; y < self.parameters().shape[1]; ++y)
-            {
-                for(int x = 0; x < self.parameters().shape[0]; ++x)
+        .def("is_land", [](dtks::AntSimulation & self) {
+            auto& map = self.is_land();
+            return nb::ndarray<nb::numpy, uint8_t, nb::shape<-1, -1>>(
+                map.data(),
                 {
-                    self.is_land()(x, y)  = array(x, y);
-                }
-            }
-        })
+                    std::size_t(map.shape()[0]), std::size_t(map.shape()[1])},
+                nb::handle()
+            );
+        }, nb::rv_policy::reference_internal)
 
-        .def("draw",[](ant::AntSimulation & self, RgbaImgUInt8 & img){
+
+
+
+        .def("draw",[](dtks::AntSimulation & self, RgbaImgUInt8 & img){
             // get the ptr
             auto ptr = reinterpret_cast<uint8_t*>(img.data());
 
@@ -100,9 +85,9 @@ void export_ant_simulation(nb::module_& m)
 
         })
         #ifdef USE_RAYLIB
-        .def("run_with_raylib", [](ant::AntSimulation & self, std::size_t n_steps_per_draw){
+        .def("run_with_raylib", [](dtks::AntSimulation & self, std::size_t n_steps_per_draw){
             
-            ant::MultiChannelImage2d<uint8_t, 4> display_image(self.parameters().shape, {0,0,0,0});
+            dtks::MultiChannelImage2d<uint8_t, 4> display_image(self.parameters().shape, {0,0,0,0});
 
             InitWindow(self.parameters().shape[0], self.parameters().shape[1], "Ant Simulation");
             SetTargetFPS(60);
@@ -170,17 +155,24 @@ void export_ant_simulation(nb::module_& m)
         #endif
     ;
 
-    nb::class_<ant::Parameters>(m, "Parameters")
+    nb::class_<dtks::Parameters>(m, "Parameters")
         .def(nb::init<>())
-        .def_rw("shape", &ant::Parameters::shape)
-        .def_rw("n_ants", &ant::Parameters::n_ants)
-        .def_rw("pheromone_deposit_amount", &ant::Parameters::pheromone_deposit_amount)
-        .def_rw("nest_pheromone_deposit_amount", &ant::Parameters::nest_pheromone_deposit_amount)
-        .def_rw("pheromone_evaporation_rate", &ant::Parameters::pheromone_evaporation_rate)
-        .def_rw("sense_distance", &ant::Parameters::sense_distance)
-        .def_rw("sense_angle", &ant::Parameters::sense_angle)
-        .def_rw("turn_angle", &ant::Parameters::turn_angle)
-        .def_rw("wall_repellent_strength", &ant::Parameters::wall_repellent_strength);
+        .def_rw("shape", &dtks::Parameters::shape)
+        .def_rw("n_ants", &dtks::Parameters::n_ants)
+        .def_rw("pheromone_deposit_amount", &dtks::Parameters::pheromone_deposit_amount)
+        .def_rw("nest_pheromone_deposit_amount", &dtks::Parameters::nest_pheromone_deposit_amount)
+        .def_rw("pheromone_evaporation_rate", &dtks::Parameters::pheromone_evaporation_rate)
+        .def_rw("sense_distance", &dtks::Parameters::sense_distance)
+        .def_rw("sense_angle", &dtks::Parameters::sense_angle)
+        .def_rw("turn_angle", &dtks::Parameters::turn_angle)
+        .def_rw("wall_repellent_strength", &dtks::Parameters::wall_repellent_strength)
+        .def_rw("beta_uniformity", &dtks::Parameters::beta_uniformity)
+        .def_rw("sigma_diffusion", &dtks::Parameters::sigma_diffusion)
+        .def_rw("pheromone_truncation_threshold", &dtks::Parameters::pheromone_truncation_threshold)
+        .def_rw("only_wall_turn_angle", &dtks::Parameters::only_wall_turn_angle)    \
+        .def_rw("seed", &dtks::Parameters::seed)
+        .def_rw("infinite_food", &dtks::Parameters::infinite_food)
+    ;
 };
 
 

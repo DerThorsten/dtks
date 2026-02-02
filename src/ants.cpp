@@ -7,7 +7,7 @@
 #include <utility>
 #include "ants.hpp"
 
-namespace ant{
+namespace dtks{
 
     float to_radians(float degrees)
     {
@@ -80,9 +80,15 @@ namespace ant{
         }
         for(auto i=0; i<food_map_.size(); ++i)
         {
+            auto & phero = pheromone_map_[i];
             if(food_map_[i] > 0)
             {
-                pheromone_map_[i][1] = params_.nest_pheromone_deposit_amount;
+                phero[1] = params_.nest_pheromone_deposit_amount;
+            }
+            if(is_land_[i] == 0)
+            {
+                phero[0] = 0.0f;
+                phero[1] = 0.0f;
             }
         }
     }
@@ -121,6 +127,11 @@ namespace ant{
             auto nh_xy = round_and_wrap({nh_x, nh_y});
             auto sense_xy = round_and_wrap({sense_x, sense_y});
             auto pheromone = pheromone_map_(sense_xy[0], sense_xy[1])[int(!ant.carrying_food)];
+
+
+
+
+            
             auto is_land = is_land_(sense_xy[0], sense_xy[1]);
             auto is_land_nh = is_land_(nh_xy[0], nh_xy[1]);
             is_land_at_distance_count += is_land;
@@ -136,9 +147,10 @@ namespace ant{
                 }
             }
             else
-            {
+            {   
+                auto & food_amount = food_map_(sense_xy[0], sense_xy[1]);
                 // looking for food
-                if(food_map_(sense_xy[0], sense_xy[1]) > 0)
+                if(food_amount > 0)
                 {
                     is_target[i] = 1;
                     any_target = true;
@@ -264,12 +276,14 @@ namespace ant{
             }
             else
             {
+                auto & food_amount = food_map_(ant.grid_position[0], ant.grid_position[1]);
                 // check for food
-                if(food_map_(ant.grid_position[0], ant.grid_position[1]) > 0)
+                if(food_amount > 0)
                 {
                     ant.carrying_food = true;  
                     ant.direction += M_PI; // turn around
                     this->food_collected_ += 1;
+                    food_amount -=  params_.infinite_food ? 0 : 1;
                 }
                 else
                 {

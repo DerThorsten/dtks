@@ -11,7 +11,7 @@
 #include <utility>
 #include "image.hpp"
 
-namespace ant{
+namespace dtks{
 
     float to_radians(float degrees);
 
@@ -36,6 +36,7 @@ namespace ant{
         float wall_repellent_strength = 100.5f;
         float pheromone_truncation_threshold = 0.0001f;
         long seed = 42;
+        bool infinite_food = true;
     };
 
 

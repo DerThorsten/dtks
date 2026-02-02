@@ -28,8 +28,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(NOT CMAKE_SYSTEM_NAME STREQUAL "Emscripten")
     set(USE_RAYLIB ON)
+    set(BUILD_EXECUTABLES ON)
 else()
     set(USE_RAYLIB OFF)
+    set(BUILD_EXECUTABLES OFF)
 endif()
 
 
@@ -50,6 +52,13 @@ endif()
 
 find_package(Python 3.9 COMPONENTS Interpreter ${DEV_MODULE} REQUIRED)
 
+
+if(BUILD_EXECUTABLES)
+    add_executable(particle_life_main src/particle_life_main.cpp
+          src/particle_life.cpp
+    )
+    target_link_libraries(particle_life_main PRIVATE raylib)
+endif()
 
 # Detect the installed nanobind package and import it into CMake
 execute_process(
