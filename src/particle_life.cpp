@@ -4,17 +4,34 @@
 namespace dtks{
 
 
-    float distance(float r, float a, float beta=0.3f) {
-        if(r<beta){
-            return  r/beta -1.0f;
+
+
+    // float distance(float r, float a, float beta=0.3f) {
+    //     if(r<beta){
+    //         return  r/beta -1.0f;
+    //     }
+    //     else if (beta<r && r<1.0f){
+    //         return a * ( 1.0f - std::abs(2*r -1 -  beta)/(1.0f - beta));
+    //     }
+    //     else{
+    //         return 0.0f;
+    //     }
+    // };
+
+    float distance(float r, float a, float beta=0.3f)
+    {
+        if(r < beta) {
+            return r / beta - 1.0f;
         }
-        else if (beta<r && r<1.0f){
-            return a * ( 1.0f - std::abs(2*r -1 -  beta)/(1.0f - beta));
+        else if(beta < r && r < 1.0f) {
+            return a * (1.0f - std::abs(2.0f * r - 1.0f - beta) / (1.0f - beta));
         }
-        else{
+        else {
             return 0.0f;
         }
-    };
+    }
+
+
     
     ParticleSimulation::ParticleSimulation(const ParticleLifeParameters& params)
     :   params_(params),
