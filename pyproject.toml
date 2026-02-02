@@ -5,7 +5,7 @@ build-backend = "scikit_build_core.build"
 [project]
 # derthorstenkitchensink
 name = "dtks" 
-version = "0.0.1"
+version = "0.0.2"
 description = "An example minimal project that compiles bindings using nanobind and scikit-build"
 readme = "README.md"
 requires-python = ">=3.8"
